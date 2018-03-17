@@ -6,8 +6,10 @@
 普通的mvp结构view 和 presenter层可能还是会有上千行代码，所以要拆分view和presenter
 
 新结构如下：
+![mvcp](https://github.com/bin-qmtv/MVCP/blob/master/img/mvcp.png)
 
-                                              ViewModel
+
+                                                           ViewModel
 View <----------> （UI）Controller <----------> Presenter <----------> Model
 
 这种模式把activity或者fragment当作了一个维护众多controller的协调者
