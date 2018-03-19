@@ -1,6 +1,9 @@
 package com.example.dell.myapplication.mvp;
 
+import android.content.Intent;
 import android.support.v4.util.ArrayMap;
+
+import com.example.dell.myapplication.muiltmvvmp.txt.TxtController;
 
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +43,16 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         }
         if (!hasBackAction) {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
+        for (Map.Entry<Class, UIController> controllerEntry : set) {
+            UIController uiController = controllerEntry.getValue();
+            uiController.onResult(requestCode, resultCode, data);
         }
     }
 }

@@ -8,7 +8,6 @@ import com.example.dell.myapplication.mvp.BaseView;
  * @author bin
  * @date 2018/3/16 10:54
  */
-
 public interface ImgContract {
 
     interface Presenter {

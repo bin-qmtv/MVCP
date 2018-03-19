@@ -1,7 +1,6 @@
 package com.example.dell.myapplication.muiltmvvmp.btn;
 
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import com.example.dell.myapplication.R;
 import com.example.dell.myapplication.muiltmvvmp.img.ImgController;
@@ -63,7 +62,5 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
     @Override
     public void setText(Button btn, String txt) {
         btn.setText(txt);
-
-        //(()controller).fetch();
     }
 }

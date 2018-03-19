@@ -22,9 +22,6 @@ View <----------> （UI）Controller <----------> Presenter <----------> Model
 
 public class MainActivity extends ControllerActivity {
 
-    //TextViewModel viewModel; ViewModel可用于不同UIController之间数据共享
-    final int CODE_TXTCONTROLLER = 1;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main3;
@@ -36,15 +33,6 @@ public class MainActivity extends ControllerActivity {
         addUIController(new ImgController(this));
         addUIController(new BtnController(this));
         super.init();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CODE_TXTCONTROLLER) {
-            getUIController(TxtController.class).onResult(requestCode, resultCode, data);
-        }
-        // else...
     }
 }
 

@@ -7,8 +7,6 @@ import com.example.dell.myapplication.mvp.ControllerActivity;
 import com.example.dell.myapplication.mvp.UIController;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 /**
  * description

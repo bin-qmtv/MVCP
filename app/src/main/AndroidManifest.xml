@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvvmp.Main2Activity" />
-        <activity android:name=".muiltmvvmp.Main3Activity"></activity>
+        <activity android:name=".muiltmvvmp.Main3Activity" />
     </application>
 
 </manifest>

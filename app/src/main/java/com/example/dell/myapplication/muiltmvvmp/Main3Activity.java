@@ -10,15 +10,10 @@ import com.example.dell.myapplication.muiltmvvmp.img.ImgController;
 import com.example.dell.myapplication.muiltmvvmp.txt.TextViewModel;
 import com.example.dell.myapplication.muiltmvvmp.txt.TxtController;
 import com.example.dell.myapplication.mvp.ControllerActivity;
-import com.example.dell.myapplication.mvp.UIController;
-
-import java.util.Map;
-import java.util.Set;
 
 public class Main3Activity extends ControllerActivity {
 
-    TextViewModel viewModel;
-    final int CODE_TXTCONTROLLER = 1;
+    TextViewModel viewModel;//可用于不同UIController之间数据共享，跟用于Fragment共享数据用法一样
 
     public static void start(Context context) {
         Intent starter = new Intent(context, Main3Activity.class);
@@ -44,19 +39,8 @@ public class Main3Activity extends ControllerActivity {
 
     public void fetch() {
         viewModel.fetch(null).subscribe(s -> {
-            Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-            for (Map.Entry<Class, UIController> classUIControllerEntry : set) {
-                //classUIControllerEntry.getValue().onFirstLoad();
-            }
+
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CODE_TXTCONTROLLER) {
-            getUIController(TxtController.class).onResult(requestCode, resultCode, data);
-        }
-        // else...
-    }
 }

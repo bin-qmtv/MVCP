@@ -2,12 +2,10 @@ package com.example.dell.myapplication.mvp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 /**
- * 一个纯粹的基础Activity（只保留埋点）
+ * 一个纯粹的基础Activity
  *
  * @author bin
  * @date 2017/12/5 15:14
