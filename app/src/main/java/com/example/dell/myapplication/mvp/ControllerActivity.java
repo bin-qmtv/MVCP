@@ -1,10 +1,9 @@
 package com.example.dell.myapplication.mvp;
 
 import android.support.v4.util.ArrayMap;
-import android.widget.Button;
-import android.widget.ImageView;
 
-import com.example.dell.myapplication.R;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * description
@@ -27,5 +26,20 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
     }
 
     public void initView() {
+    }
+
+    @Override
+    public void onBackPressed() {
+        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
+        boolean hasBackAction = false;
+        for (Map.Entry<Class, UIController> controllerEntry : set) {
+            UIController uiController = controllerEntry.getValue();
+            if (uiController.onBackPressed()) {
+                hasBackAction = true;
+            }
+        }
+        if (!hasBackAction) {
+            super.onBackPressed();
+        }
     }
 }

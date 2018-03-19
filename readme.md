@@ -22,7 +22,7 @@ View <----------> （UI）Controller <----------> Presenter <----------> Model
 
 public class MainActivity extends ControllerActivity {
 
-    TextViewModel viewModel;
+    //TextViewModel viewModel; ViewModel可用于不同UIController之间数据共享
     final int CODE_TXTCONTROLLER = 1;
 
     @Override

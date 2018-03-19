@@ -12,7 +12,7 @@ import android.view.View;
  * @author bin
  * @date 2018/3/15 18:32
  */
-public abstract class UIController<P> {
+public abstract class UIController<P> implements Backable {
 
     protected ControllerActivity controller;
 
@@ -49,6 +49,10 @@ public abstract class UIController<P> {
 
     public <T> void onFirstLoad(T t){
 
+    }
+
+    public boolean onBackPressed() {
+        return false;
     }
 
     public abstract void initPresenter();
