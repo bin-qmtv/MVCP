@@ -14,6 +14,10 @@ View <----------> （UI）Controller <----------> Presenter <----------> Model
 
 这种模式把activity或者fragment当作了一个维护众多controller的协调者
 
+
+
+[当移动端越来越臃肿，传统MVVM和MVP已经招架不住的时候](http://mp.weixin.qq.com/s?__biz=MzU0OTQyMzUyOQ==&mid=2247483655&idx=1&sn=c912961fc68f0b49866fa3818bfac16c&chksm=fbb151c1ccc6d8d708b327d1c946ce16d24795929bd086a485a05b02dcf6dd04e7fac91a58e0&mpshare=1&scene=23&srcid=0403BacPdBXTZ7Mb1yxSK62B#rd)
+
 ## 代码结构
 
 #### activity已经不再是一个view了，而是一个维护各个controller的一个中间者
