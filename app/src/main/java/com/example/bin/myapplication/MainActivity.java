@@ -8,16 +8,10 @@ import com.example.bin.myapplication.mvvmp.Main2Activity;
 
 public class MainActivity extends AppCompatActivity {
 
-    String TAG = "MainActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
-    }
-
-    private void initView() {
     }
 
     public void clickBtn(View view) {

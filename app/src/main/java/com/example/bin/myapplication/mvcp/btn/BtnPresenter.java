@@ -1,5 +1,7 @@
 package com.example.bin.myapplication.mvcp.btn;
 
+import android.util.Log;
+
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.LifecyclePresenter;
 
@@ -25,6 +27,7 @@ public class BtnPresenter extends LifecyclePresenter<BtnContract.View> implement
 
     @Override
     public String doSomething() {
+        Log.d("---", "doSomething on img visible");
         return null;
     }
 }

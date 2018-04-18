@@ -13,7 +13,6 @@ import io.reactivex.disposables.Disposable;
  */
 public class BaseViewModel extends ViewModel {
 
-    protected static final int RETRYCOUNT = 3;
     private CompositeDisposable disposables = new CompositeDisposable();
 
     public void add(Object o) {

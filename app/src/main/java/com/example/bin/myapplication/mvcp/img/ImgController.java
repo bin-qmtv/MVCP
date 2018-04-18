@@ -30,6 +30,7 @@ public class ImgController extends UIController<ImgContract.Presenter> implement
     @Override
     public void initView() {
         img = findViewById(R.id.img);
+        img.post(this::doOnImgVisible);
     }
 
     @Override
@@ -38,12 +39,6 @@ public class ImgController extends UIController<ImgContract.Presenter> implement
     }
 
     public Observable<Boolean> doOnImgVisible() {
-
-        Observable<Boolean> observable = Observable.create(emitter -> img.post(() -> {
-            emitter.onNext(true);
-            emitter.onComplete();
-        }));
-
-        return observable;
+        return Observable.just(true);
     }
 }

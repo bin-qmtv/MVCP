@@ -12,7 +12,7 @@ public class Main2ViewModel extends BaseViewModel {
 
     public Observable<Object> fetch() {
         return Observable.empty()
-                .delay(1000, TimeUnit.MILLISECONDS)
+                .delay(1200, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

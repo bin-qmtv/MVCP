@@ -5,7 +5,6 @@ import com.example.bin.myapplication.mvp.BaseView;
 public interface Main2Contract {
 
     interface Presenter {
-
         void doSomething();
     }
 

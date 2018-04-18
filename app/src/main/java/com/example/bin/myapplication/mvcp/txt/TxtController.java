@@ -78,7 +78,7 @@ public class TxtController extends UIController<TxtContract.Presenter> implement
 
     @Override
     public Observable<String> getTextCallBack() {
-        return Observable.just(getText()).delay(1000, TimeUnit.MILLISECONDS);
+        return Observable.just(getText()).delay(1200, TimeUnit.MILLISECONDS);
     }
 
     private int i = 0;

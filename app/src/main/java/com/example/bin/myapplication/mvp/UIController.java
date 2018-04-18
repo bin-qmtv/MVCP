@@ -1,9 +1,10 @@
 package com.example.bin.myapplication.mvp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 /**
@@ -15,6 +16,7 @@ import android.view.View;
 public abstract class UIController<P> implements Backable {
 
     protected ControllerActivity controller;
+    protected ControllerFragment controllerFragment;
 
     protected P presenter;
 
@@ -22,33 +24,56 @@ public abstract class UIController<P> implements Backable {
         this.presenter = presenter;
     }
 
-    protected UIController(ControllerActivity controller) {
+    public UIController(ControllerActivity controller) {
         this.controller = controller;
+        init();
+    }
+
+    public UIController(ControllerFragment controllerFragment) {
+        this.controllerFragment = controllerFragment;
+        FragmentActivity activity = controllerFragment.getActivity();
+        if (activity != null && activity instanceof ControllerActivity) {
+            controller = (ControllerActivity) activity;
+        }
         init();
     }
 
     protected void init() {
         initPresenter();
-        initView();
     }
 
     public <T extends View> T findViewById(@IdRes int id) {
-        return controller.findViewById(id);
+        if (controllerFragment != null) {
+            return controllerFragment.findViewById(id);
+        }
+        if (controller != null) {
+            return controller.findViewById(id);
+        }
+        return null;
     }
 
-    public <T extends Activity> T getActivity() {
-        return (T) controller;
+    public ControllerActivity getController() {
+        return controller;
+    }
+
+    public ControllerFragment getControllerFragment() {
+        return controllerFragment;
     }
 
     public Context getContext() {
+        if (controllerFragment != null) {
+            return controllerFragment.getContext();
+        }
         return controller;
     }
 
     public void onResult(int requestCode, int resultCode, Intent data) {
     }
 
-    public <T> void onFirstLoad(T t){
+    public void onSaveState(Bundle outState) {
+    }
 
+    public void onStateRestored(Bundle savedState) {
     }
 
     public boolean onBackPressed() {
@@ -58,4 +83,5 @@ public abstract class UIController<P> implements Backable {
     public abstract void initPresenter();
 
     public abstract void initView();
+
 }

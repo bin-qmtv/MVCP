@@ -56,8 +56,9 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
                     .subscribe(s -> setText(btn3, s));
         });
 
-        controller.getUIController(ImgController.class).doOnImgVisible().subscribe(visible->{
-            // do on visible
+        ImgController imgController = controller.getUIController(ImgController.class);
+        imgController.doOnImgVisible().subscribe(visible->{
+            // do on img visible
             presenter.doSomething();
         });
     }

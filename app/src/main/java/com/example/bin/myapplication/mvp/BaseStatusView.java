@@ -16,4 +16,6 @@ public interface BaseStatusView<P> extends BaseView<P> {
     void showError(boolean show);
 
     void showEmpty(boolean show);
+
+    void showOffline(boolean show);
 }

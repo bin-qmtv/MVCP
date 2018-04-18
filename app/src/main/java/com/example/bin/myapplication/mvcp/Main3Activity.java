@@ -9,6 +9,7 @@ import com.example.bin.myapplication.mvcp.btn.BtnController;
 import com.example.bin.myapplication.mvcp.img.ImgController;
 import com.example.bin.myapplication.mvcp.txt.TextViewModel;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
+import com.example.bin.myapplication.mvcp.viewpager.PagerController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
 
 public class Main3Activity extends ControllerActivity {
@@ -27,14 +28,19 @@ public class Main3Activity extends ControllerActivity {
 
     @Override
     public void init() {
-        addUIController(new TxtController(this));
-        addUIController(new ImgController(this));
-        addUIController(new BtnController(this));
         super.init();
 
         viewModel = ViewModelProviders.of(this).get(TextViewModel.class);
 
         fetch();
+    }
+
+    @Override
+    public void initUIController() {
+        addUIController(new TxtController(this));
+        addUIController(new ImgController(this));
+        addUIController(new BtnController(this));
+        addUIController(new PagerController(this));
     }
 
     public void fetch() {

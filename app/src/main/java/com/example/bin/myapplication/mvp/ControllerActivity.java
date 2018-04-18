@@ -1,6 +1,7 @@
 package com.example.bin.myapplication.mvp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
@@ -26,8 +27,42 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         controllerArrayMap.put(t.getClass(), t);
     }
 
-    public void initView() {
+    @Override
+    protected void init() {
+        initUIController();
+        initView();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
+        for (Map.Entry<Class, UIController> controllerEntry : set) {
+            UIController uiController = controllerEntry.getValue();
+            if (uiController != null) uiController.onSaveState(outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
+        for (Map.Entry<Class, UIController> controllerEntry : set) {
+            UIController uiController = controllerEntry.getValue();
+            if (uiController != null) uiController.onStateRestored(savedInstanceState);
+        }
+    }
+
+    @Override
+    public void initView() {
+        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
+        for (Map.Entry<Class, UIController> controllerEntry : set) {
+            UIController uiController = controllerEntry.getValue();
+            if (uiController != null) uiController.initView();
+        }
+    }
+
+    public abstract void initUIController();
 
     @Override
     public void onBackPressed() {
@@ -35,7 +70,7 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         boolean hasBackAction = false;
         for (Map.Entry<Class, UIController> controllerEntry : set) {
             UIController uiController = controllerEntry.getValue();
-            if (uiController.onBackPressed()) {
+            if (uiController != null && uiController.onBackPressed()) {
                 hasBackAction = true;
             }
         }
@@ -50,7 +85,9 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
         for (Map.Entry<Class, UIController> controllerEntry : set) {
             UIController uiController = controllerEntry.getValue();
-            uiController.onResult(requestCode, resultCode, data);
+            if(uiController != null) {
+                uiController.onResult(requestCode, resultCode, data);
+            }
         }
     }
 }

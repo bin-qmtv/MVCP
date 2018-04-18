@@ -12,5 +12,4 @@ public interface BaseView<P> {
     void setPresenter(P presenter);
 
     Context getContext();
-
 }

@@ -32,4 +32,6 @@ public abstract class MVPFragment<P> extends BaseCleanFragment {
     public void showError(boolean show){}
 
     public void showEmpty(boolean show){}
+
+    public void showOffline(boolean show){}
 }
