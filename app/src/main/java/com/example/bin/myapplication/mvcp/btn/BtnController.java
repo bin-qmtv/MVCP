@@ -7,10 +7,13 @@ import com.example.bin.myapplication.mvcp.img.ImgController;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
 import com.example.bin.myapplication.mvp.UIController;
+import com.example.bin.myapplication.ui.StateView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * description
@@ -26,6 +29,8 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
     Button btn2;
     @BindView(R.id.btn3)
     Button btn3;
+
+    StateView mStateView;
 
     public BtnController(ControllerActivity controller) {
         super(controller);
@@ -51,9 +56,31 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
         });
 
         btn3.setOnClickListener(v -> {
+            mStateView = new StateView(getContext()).attachTo(btn3);
             controller.getUIController(TxtController.class).getTextCallBack()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> setText(btn3, s));
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            mStateView.setState(StateView.STATE_LOADING);
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            mStateView.setState(StateView.STATE_NONE);
+                            btn3.setText(s);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mStateView.setState(StateView.STATE_ERROR);
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mStateView.detach();
+                        }
+                    });
         });
 
         ImgController imgController = controller.getUIController(ImgController.class);

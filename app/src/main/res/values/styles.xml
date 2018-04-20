@@ -12,4 +12,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <declare-styleable name="StateView">
+        <attr name="state_loadingView" format="reference" />
+        <attr name="state_emptyView" format="reference" />
+        <attr name="state_errorView" format="reference" />
+        <attr name="state_offlineView" format="reference" />
+        <attr name="state_viewState" format="enum">
+            <enum name="none" value="0" />
+            <enum name="loading" value="1" />
+            <enum name="empty" value="2" />
+            <enum name="error" value="3" />
+            <enum name="offline" value="4" />
+        </attr>
+        <attr name="state_animateViewChanges" format="boolean" />
+    </declare-styleable>
 </resources>
