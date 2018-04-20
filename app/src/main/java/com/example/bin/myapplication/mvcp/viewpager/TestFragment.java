@@ -18,5 +18,6 @@ public class TestFragment extends ControllerFragment {
 
     @Override
     public void initUIController() {
+        addUIController(new TestFragmentController(this));
     }
 }

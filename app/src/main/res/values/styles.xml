@@ -12,6 +12,34 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- AwesomeDialog -->
+    <style name="AwesomeDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:windowAnimationStyle">@style/AwesomeDialogAnimation</item>
+    </style>
+
+    <style name="AwesomeDialogTheme.Transparent">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AwesomeBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/AwesomeBottomSheetDialogAnimation</item>
+    </style>
+
+    <style name="AwesomeDialogAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+    <style name="AwesomeBottomSheetDialogAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/bottom_sheet_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_sheet_dialog_exit</item>
+    </style>
+
+    <integer name="AwesomeDialogDuration">160</integer>
+    <integer name="AwesomeBottomSheetDialogDuration">260</integer>
+    <!-- AwesomeDialog end-->
+
     <declare-styleable name="StateView">
         <attr name="state_loadingView" format="reference" />
         <attr name="state_emptyView" format="reference" />
