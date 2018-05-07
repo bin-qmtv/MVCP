@@ -32,7 +32,7 @@ public class TxtController extends UIController<TxtContract.Presenter> implement
     @Override
     public void initPresenter() {
         new TxtPresenterImpl(this, ViewModelProviders.of(controller)
-                .get(TextViewModel.class)).register(controller);
+                .get(TextViewModel.class));
     }
 
     @Override

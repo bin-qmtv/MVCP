@@ -1,5 +1,7 @@
 package com.example.bin.myapplication.mvp;
 
+import android.arch.lifecycle.LifecycleObserver;
+
 /**
  * description
  *
@@ -11,7 +13,11 @@ public abstract class MVPActivity<P> extends BaseCleanActivity {
     protected P presenter;
 
     public void setPresenter(P presenter) {
-        this.presenter = presenter;
+        this.presenter = PresenterDelegate.newProxy(presenter);
+        if (presenter instanceof LifecycleObserver) {
+            LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
+            getLifecycle().addObserver(lifecycleObserver);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.bin.myapplication.mvp;
 
+import android.arch.lifecycle.LifecycleObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -20,7 +21,11 @@ public abstract class MVPFragment<P> extends BaseCleanFragment {
     }
 
     public void setPresenter(P presenter) {
-        this.presenter = presenter;
+        this.presenter = PresenterDelegate.newProxy(presenter);
+        if (presenter instanceof LifecycleObserver) {
+            LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
+            getLifecycle().addObserver(lifecycleObserver);
+        }
     }
 
     protected abstract void initPresenter();

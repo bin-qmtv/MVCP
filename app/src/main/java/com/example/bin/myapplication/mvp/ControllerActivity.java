@@ -62,8 +62,6 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         }
     }
 
-    public abstract void initUIController();
-
     @Override
     public void onBackPressed() {
         Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
@@ -90,4 +88,6 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
             }
         }
     }
+
+    public abstract void initUIController();
 }

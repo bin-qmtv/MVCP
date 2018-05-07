@@ -1,5 +1,6 @@
 package com.example.bin.myapplication.mvp;
 
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +22,15 @@ public abstract class UIController<P> implements Backable {
     protected P presenter;
 
     public void setPresenter(P presenter) {
-        this.presenter = presenter;
+        this.presenter = PresenterDelegate.newProxy(presenter);
+        if (presenter instanceof LifecycleObserver) {
+            LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
+            if (controllerFragment != null) {
+                controllerFragment.getLifecycle().addObserver(lifecycleObserver);
+            }else {
+                controller.getLifecycle().addObserver(lifecycleObserver);
+            }
+        }
     }
 
     public UIController(ControllerActivity controller) {
