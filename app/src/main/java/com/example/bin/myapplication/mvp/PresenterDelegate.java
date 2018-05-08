@@ -52,7 +52,7 @@ public class PresenterDelegate implements InvocationHandler {
         Class[] clsInterfaces = cls.getInterfaces();
         if (clsInterfaces != null && clsInterfaces.length > 0) {
             Class superClass = cls.getSuperclass();
-            if (superClass != null && !superClass.equals(LifecyclePresenter.class)) {
+            if (superClass != null && !superClass.equals(Object.class) && !superClass.equals(LifecyclePresenter.class)) {
                 throw new IllegalArgumentException("Do not extends other class except LifecyclePresenter");
             }
         }else {
