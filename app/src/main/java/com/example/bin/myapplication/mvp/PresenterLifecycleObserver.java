@@ -10,7 +10,7 @@ import io.reactivex.observers.DisposableObserver;
  */
 public class PresenterLifecycleObserver<T> extends DisposableObserver<T> {
 
-    public PresenterLifecycleObserver(LifecyclePresenter lifecyclePresenter) {
+    public PresenterLifecycleObserver(ILifecycle lifecyclePresenter) {
         lifecyclePresenter.addDisposable(this);
     }
 

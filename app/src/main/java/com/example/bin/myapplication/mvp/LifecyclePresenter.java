@@ -1,6 +1,6 @@
 package com.example.bin.myapplication.mvp;
 
-import android.arch.lifecycle.LifecycleOwner;
+import android.support.annotation.NonNull;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -14,25 +14,19 @@ import io.reactivex.disposables.Disposable;
 public class LifecyclePresenter<V extends BaseView> implements ILifecycle {
 
     protected V view;
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private CompositeDisposable disposables;
 
-    public LifecyclePresenter(V view) {
-        if (view instanceof LifecycleOwner) {
-            register((LifecycleOwner) view);
-        }
+    public LifecyclePresenter(@NonNull V view) {
         this.view = view;
         view.setPresenter(this);
     }
 
-    void addDisposable(Disposable disposable) {
+    @Override
+    public void addDisposable(@NonNull Disposable disposable) {
         if (disposables == null) {
             disposables = new CompositeDisposable();
         }
         disposables.add(disposable);
-    }
-
-    void register(LifecycleOwner owner) {
-        owner.getLifecycle().addObserver(this);
     }
 
     @Override

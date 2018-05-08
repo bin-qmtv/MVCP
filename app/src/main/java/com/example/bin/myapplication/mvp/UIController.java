@@ -71,7 +71,7 @@ public abstract class UIController<P> implements Backable {
 
     public Context getContext() {
         if (controllerFragment != null) {
-            return controllerFragment.getContext();
+            return controllerFragment.getActivity();
         }
         return controller;
     }

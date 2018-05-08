@@ -7,12 +7,11 @@ import android.widget.Toast;
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.ControllerActivity;
 import com.example.bin.myapplication.mvp.UIController;
+import com.example.bin.myapplication.ui.StateView;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 /**
  * R.layout.activity_main3
@@ -23,7 +22,7 @@ import io.reactivex.disposables.Disposable;
 public class TxtController extends UIController<TxtContract.Presenter> implements TxtContract.View {
 
     private TextView text;
-    private Disposable disposable;
+    private StateView mStateView;
 
     public TxtController(ControllerActivity controller) {
         super(controller);
@@ -50,30 +49,13 @@ public class TxtController extends UIController<TxtContract.Presenter> implement
         text.setText(txt);
     }
 
-    int loading = 0;
-
     @Override
     public void loading(boolean b) {
+        if (mStateView == null) {
+            mStateView = new StateView(getContext()).attachTo(text);
+        }
 
-        // 模拟loading
-        if (disposable == null || disposable.isDisposed()) {
-            disposable = Observable.interval(250, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(aLong -> {
-                        if (loading == 3) {
-                            loading = 0;
-                        }
-                        StringBuilder sb = new StringBuilder("• ");
-                        for (int i = 0; i < loading; i++) {
-                            sb.append("• ");
-                        }
-                        setText(sb.toString());
-                        loading++;
-                    });
-        }
-        if (!b) {
-            disposable.dispose();
-        }
+        mStateView.setState(b ? StateView.STATE_LOADING : StateView.STATE_NONE);
     }
 
     @Override

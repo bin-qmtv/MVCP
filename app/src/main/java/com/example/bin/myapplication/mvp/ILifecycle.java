@@ -4,6 +4,8 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 
+import io.reactivex.disposables.Disposable;
+
 /**
  * description
  *
@@ -11,6 +13,8 @@ import android.arch.lifecycle.OnLifecycleEvent;
  * @date 2018/5/7 16:27
  */
 public interface ILifecycle extends LifecycleObserver {
+
+    void addDisposable(Disposable disposable);
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     void create();
