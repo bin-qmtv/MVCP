@@ -6,6 +6,7 @@ import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvcp.img.ImgController;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
+import com.example.bin.myapplication.mvp.Presenter;
 import com.example.bin.myapplication.mvp.UIController;
 import com.example.bin.myapplication.ui.StateView;
 
@@ -21,6 +22,7 @@ import io.reactivex.disposables.Disposable;
  * @author bin
  * @date 2018/3/15 18:37
  */
+@Presenter(BtnPresenter.class)
 public class BtnController extends UIController<BtnContract.Presenter> implements BtnContract.View {
 
     @BindView(R.id.btn)
@@ -34,11 +36,6 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
 
     public BtnController(ControllerActivity controller) {
         super(controller);
-    }
-
-    @Override
-    public void initPresenter() {
-        new BtnPresenter(this);
     }
 
     @Override

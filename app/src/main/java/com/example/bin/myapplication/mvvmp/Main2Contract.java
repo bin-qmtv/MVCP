@@ -9,6 +9,8 @@ public interface Main2Contract {
     }
 
     interface View extends BaseView<Presenter> {
+        Main2ViewModel getViewModel();
+
         void setText(String txt);
     }
 

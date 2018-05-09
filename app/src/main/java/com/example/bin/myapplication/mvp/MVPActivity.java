@@ -26,7 +26,11 @@ public abstract class MVPActivity<P> extends BaseCleanActivity {
         super.init();
     }
 
-    protected abstract void initPresenter();
+    protected void initPresenter(){
+        if (this instanceof BaseView) {
+            InjectUtil.injectPresenter((BaseView)this);
+        }
+    }
 
     public void showLoading(boolean cancelable){}
 

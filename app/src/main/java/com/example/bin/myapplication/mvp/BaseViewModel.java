@@ -1,6 +1,9 @@
 package com.example.bin.myapplication.mvp;
 
 import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -15,6 +18,14 @@ public class BaseViewModel extends ViewModel {
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
+    public static BaseViewModel get(FragmentActivity activity) {
+        return ViewModelProviders.of(activity).get(BaseViewModel.class);
+    }
+
+    public static BaseViewModel get(Fragment fragment) {
+        return ViewModelProviders.of(fragment).get(BaseViewModel.class);
+    }
+
     public void add(Object o) {
         if (o instanceof Disposable) {
             addDisposable((Disposable) o);
@@ -23,7 +34,7 @@ public class BaseViewModel extends ViewModel {
         }
     }
 
-    private void addDisposable(Disposable disposable) {
+    void addDisposable(Disposable disposable) {
         if (disposables == null) {
             disposables = new CompositeDisposable();
         }

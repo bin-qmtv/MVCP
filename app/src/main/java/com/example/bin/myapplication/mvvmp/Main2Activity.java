@@ -8,7 +8,9 @@ import android.widget.TextView;
 
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.MVPActivity;
+import com.example.bin.myapplication.mvp.Presenter;
 
+@Presenter(Main2Presenter.class)
 public class Main2Activity extends MVPActivity<Main2Contract.Presenter> implements Main2Contract.View {
 
     private TextView text;
@@ -24,23 +26,22 @@ public class Main2Activity extends MVPActivity<Main2Contract.Presenter> implemen
     }
 
     @Override
-    protected void initPresenter() {
-        new Main2Presenter(this, ViewModelProviders.of(this)
-                .get(Main2ViewModel.class));
-    }
-
-    @Override
     public void initView() {
         initToolBar(findViewById(R.id.toolbar), "mvp demo");
         text = findViewById(R.id.text);
     }
 
-    public void clickBtn(View view) {
-        presenter.doSomething();
+    @Override
+    public Main2ViewModel getViewModel() {
+        return ViewModelProviders.of(this).get(Main2ViewModel.class);
     }
 
     @Override
     public void setText(String txt) {
         this.text.setText(txt);
+    }
+
+    public void clickBtn(View view) {
+        presenter.doSomething();
     }
 }

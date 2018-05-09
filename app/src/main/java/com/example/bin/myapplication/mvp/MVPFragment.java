@@ -28,9 +28,15 @@ public abstract class MVPFragment<P> extends BaseCleanFragment {
         }
     }
 
-    protected abstract void initPresenter();
+    protected void initPresenter(){
+        if (this instanceof BaseView) {
+            InjectUtil.injectPresenter((BaseView) this);
+        }
+    }
 
     public void showLoading(boolean cancelable){}
+
+    public void showReload(boolean isShow){}
 
     public void cancelLoading(){}
 

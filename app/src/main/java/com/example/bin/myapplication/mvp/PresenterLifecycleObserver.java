@@ -10,8 +10,8 @@ import io.reactivex.observers.DisposableObserver;
  */
 public class PresenterLifecycleObserver<T> extends DisposableObserver<T> {
 
-    public PresenterLifecycleObserver(ILifecycle lifecyclePresenter) {
-        lifecyclePresenter.addDisposable(this);
+    public PresenterLifecycleObserver(BaseViewModel viewModel) {
+        viewModel.addDisposable(this);
     }
 
     @Override

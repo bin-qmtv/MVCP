@@ -2,6 +2,7 @@ package com.example.bin.myapplication.mvcp.txt;
 
 import com.example.bin.myapplication.mvp.LifecyclePresenter;
 import com.example.bin.myapplication.mvp.PresenterLifecycleObserver;
+
 /**
  * description
  *
@@ -31,7 +32,7 @@ public class TxtPresenterImpl extends LifecyclePresenter<TxtContract.View> imple
 
     @Override
     public void doSomething() {
-        viewModel.fetch(null).subscribe(new PresenterLifecycleObserver<String>(this){
+        viewModel.fetch(null).subscribe(new PresenterLifecycleObserver<String>(viewModel){
 
             @Override
             protected void onStart() {

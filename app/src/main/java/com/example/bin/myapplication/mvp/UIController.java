@@ -76,6 +76,12 @@ public abstract class UIController<P> implements Backable {
         return controller;
     }
 
+    protected void initPresenter(){
+        if (this instanceof BaseView) {
+            InjectUtil.injectPresenter((BaseView)this);
+        }
+    }
+
     public void onResult(int requestCode, int resultCode, Intent data) {
     }
 
@@ -88,8 +94,6 @@ public abstract class UIController<P> implements Backable {
     public boolean onBackPressed() {
         return false;
     }
-
-    public abstract void initPresenter();
 
     public abstract void initView();
 
