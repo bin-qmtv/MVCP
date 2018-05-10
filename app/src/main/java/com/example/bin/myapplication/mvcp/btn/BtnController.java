@@ -3,10 +3,12 @@ package com.example.bin.myapplication.mvcp.btn;
 import android.widget.Button;
 
 import com.example.bin.myapplication.R;
+import com.example.bin.myapplication.mvcp.img.ImgContract;
 import com.example.bin.myapplication.mvcp.img.ImgController;
+import com.example.bin.myapplication.mvcp.txt.TxtContract;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
-import com.example.bin.myapplication.mvp.Presenter;
+import com.example.bin.myapplication.mvp.annotation.Presenter;
 import com.example.bin.myapplication.mvp.UIController;
 import com.example.bin.myapplication.ui.StateView;
 
@@ -44,17 +46,19 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
 
         btn1.setOnClickListener(v -> {
             int res = presenter.getImg();
-            controller.getUIController(ImgController.class).setImg(res);
+            ImgContract.View imgController = getUIController(ImgController.class);
+            imgController.setImg(res);
         });
 
         btn2.setOnClickListener(v -> {
-            String txt = controller.getUIController(TxtController.class).getText();
-            setText(btn2, txt);
+            TxtContract.View txtController = getUIController(TxtController.class);
+            setText(btn2, txtController.getText());
         });
 
         btn3.setOnClickListener(v -> {
             mStateView = new StateView(getContext()).attachTo(btn3);
-            controller.getUIController(TxtController.class).getTextCallBack()
+            TxtContract.View txtController = getUIController(TxtController.class);
+            txtController.getTextCallBack()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<String>() {
                         @Override
@@ -80,7 +84,7 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
                     });
         });
 
-        ImgController imgController = controller.getUIController(ImgController.class);
+        ImgContract.View imgController = controller.getUIController(ImgController.class);
         imgController.doOnImgVisible().subscribe(visible->{
             // do on img visible
             presenter.doSomething();

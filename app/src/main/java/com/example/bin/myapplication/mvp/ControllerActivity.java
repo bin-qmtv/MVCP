@@ -2,6 +2,8 @@ package com.example.bin.myapplication.mvp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
@@ -15,16 +17,29 @@ import java.util.Set;
  */
 public abstract class ControllerActivity extends BaseCleanActivity implements Controller {
 
-    public ArrayMap<Class, UIController> controllerArrayMap = new ArrayMap<>();
+    private ArrayMap<Class, Object> controllerProxyArrayMap = new ArrayMap<>();
+    private ArrayMap<Class, UIController> controllerArrayMap = new ArrayMap<>();
 
     @Override
-    public <T extends UIController> T getUIController(Class<T> cls) {
+    @Nullable
+    public <T> T getUIController(@NonNull Class<T> cls) {
+        T proxy = (T) controllerProxyArrayMap.get(cls);
+        if (proxy != null) {
+            return proxy;
+        }
         return (T) controllerArrayMap.get(cls);
     }
 
     @Override
-    public <T extends UIController> void addUIController(T t) {
-        controllerArrayMap.put(t.getClass(), t);
+    public <T extends UIController> void addUIController(@NonNull Class<T> cls) {
+        UIController uiController = MvpFactory.newInstance(cls, this);
+        if (uiController != null) addUIController(uiController);
+    }
+
+    @Override
+    public <T extends UIController> void addUIController(@NonNull T uiController) {
+        controllerArrayMap.put(uiController.getClass(), uiController);
+        controllerProxyArrayMap.put(uiController.getClass(), MvpDelegate.newProxy(uiController));
     }
 
     @Override
@@ -83,7 +98,7 @@ public abstract class ControllerActivity extends BaseCleanActivity implements Co
         Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
         for (Map.Entry<Class, UIController> controllerEntry : set) {
             UIController uiController = controllerEntry.getValue();
-            if(uiController != null) {
+            if (uiController != null) {
                 uiController.onResult(requestCode, resultCode, data);
             }
         }

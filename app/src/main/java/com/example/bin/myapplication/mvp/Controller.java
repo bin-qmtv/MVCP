@@ -1,5 +1,8 @@
 package com.example.bin.myapplication.mvp;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * description
  *
@@ -8,7 +11,10 @@ package com.example.bin.myapplication.mvp;
  */
 public interface Controller {
 
-    <T extends UIController> T getUIController(Class<T> cls);
+    @Nullable
+    <T> T getUIController(@NonNull Class<T> cls);
 
-    <T extends UIController> void addUIController (T t);
+    <T extends UIController> void addUIController (@NonNull Class<T> cls);
+
+    <T extends UIController> void addUIController (@NonNull T uiController);
 }

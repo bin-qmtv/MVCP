@@ -38,9 +38,9 @@ public class Main3Activity extends ControllerActivity {
     @Override
     public void initUIController() {
         addUIController(new TxtController(this));
-        addUIController(new ImgController(this));
-        addUIController(new BtnController(this));
-        addUIController(new PagerController(this));
+        addUIController(ImgController.class);
+        addUIController(BtnController.class);
+        addUIController(PagerController.class);
     }
 
     public void fetch() {

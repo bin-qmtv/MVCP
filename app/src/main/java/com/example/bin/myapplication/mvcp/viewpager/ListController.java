@@ -44,10 +44,6 @@ public class ListController extends UIController implements ControllerFragment.F
     }
 
     @Override
-    public void initPresenter() {
-    }
-
-    @Override
     public void initView() {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(new ListAdapter());

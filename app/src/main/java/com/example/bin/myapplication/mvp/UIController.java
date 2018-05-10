@@ -21,8 +21,8 @@ public abstract class UIController<P> implements Backable {
 
     protected P presenter;
 
-    public void setPresenter(P presenter) {
-        this.presenter = PresenterDelegate.newProxy(presenter);
+    public final void setPresenter(P presenter) {
+        this.presenter = MvpDelegate.newProxy(presenter);
         if (presenter instanceof LifecycleObserver) {
             LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
             if (controllerFragment != null) {
@@ -47,6 +47,13 @@ public abstract class UIController<P> implements Backable {
         init();
     }
 
+    protected <T extends BaseView> T getUIController(Class<T> cls) {
+        if (controllerFragment != null) {
+            return controllerFragment.getUIController(cls);
+        }
+        return controller.getUIController(cls);
+    }
+
     protected void init() {
         initPresenter();
     }
@@ -61,7 +68,14 @@ public abstract class UIController<P> implements Backable {
         return null;
     }
 
-    public ControllerActivity getController() {
+    public Controller getController() {
+        if (controllerFragment != null) {
+            return controllerFragment;
+        }
+        return controller;
+    }
+
+    public ControllerActivity getControllerActivity() {
         return controller;
     }
 

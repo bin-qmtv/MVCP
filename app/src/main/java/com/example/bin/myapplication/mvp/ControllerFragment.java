@@ -22,6 +22,7 @@ import java.util.Set;
  */
 public abstract class ControllerFragment extends BaseCleanFragment implements Controller, Backable {
 
+    public ArrayMap<Class, UIController> controllerProxyArrayMap = new ArrayMap<>();
     public ArrayMap<Class, UIController> controllerArrayMap = new ArrayMap<>();
     private List<FragmentLifecycle> mFragmentLifecycles = new ArrayList<>();
 
@@ -33,15 +34,23 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     }
 
     @Override
-    public <T extends UIController> T getUIController(Class<T> cls) {
-        return (T) controllerArrayMap.get(cls);
+    @Nullable
+    public <T> T getUIController(@NonNull Class<T> cls) {
+        return (T) controllerProxyArrayMap.get(cls);
     }
 
     @Override
-    public <T extends UIController> void addUIController(T t) {
-        controllerArrayMap.put(t.getClass(), t);
-        if (t instanceof FragmentLifecycle) {
-            addFragmentLifecycle((FragmentLifecycle) t);
+    public <T extends UIController> void addUIController(@NonNull Class<T> cls) {
+        UIController uiController = MvpFactory.newInstance(cls, this);
+        if (uiController != null) addUIController(uiController);
+    }
+
+    @Override
+    public <T extends UIController> void addUIController(@NonNull T uiController) {
+        controllerArrayMap.put(uiController.getClass(), uiController);
+        controllerProxyArrayMap.put(uiController.getClass(), MvpDelegate.newProxy(uiController));
+        if (uiController instanceof FragmentLifecycle) {
+            addFragmentLifecycle((FragmentLifecycle) uiController);
         }
     }
 

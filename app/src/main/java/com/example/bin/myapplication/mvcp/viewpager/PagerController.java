@@ -10,6 +10,8 @@ import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.ControllerActivity;
 import com.example.bin.myapplication.mvp.UIController;
 
+import java.io.Serializable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -19,7 +21,7 @@ import butterknife.ButterKnife;
  * @author bin
  * @date 2018/4/13 9:49
  */
-public class PagerController extends UIController {
+public class PagerController extends UIController implements Serializable {
 
     @BindView(R.id.pager)
     ViewPager pager;
@@ -29,15 +31,10 @@ public class PagerController extends UIController {
     }
 
     @Override
-    public void initPresenter() {
-
-    }
-
-    @Override
     public void initView() {
-        ButterKnife.bind(this, getController());
+        ButterKnife.bind(this, getControllerActivity());
 
-        FragmentAdapter adapter = new FragmentAdapter(getController().getSupportFragmentManager());
+        FragmentAdapter adapter = new FragmentAdapter(getControllerActivity().getSupportFragmentManager());
         pager.setAdapter(adapter);
 
     }

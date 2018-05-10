@@ -21,7 +21,7 @@ public abstract class MVPFragment<P> extends BaseCleanFragment {
     }
 
     public void setPresenter(P presenter) {
-        this.presenter = PresenterDelegate.newProxy(presenter);
+        this.presenter = MvpDelegate.newProxy(presenter);
         if (presenter instanceof LifecycleObserver) {
             LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
             getLifecycle().addObserver(lifecycleObserver);

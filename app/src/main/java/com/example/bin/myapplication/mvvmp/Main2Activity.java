@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.MVPActivity;
-import com.example.bin.myapplication.mvp.Presenter;
+import com.example.bin.myapplication.mvp.annotation.Presenter;
 
 @Presenter(Main2Presenter.class)
 public class Main2Activity extends MVPActivity<Main2Contract.Presenter> implements Main2Contract.View {

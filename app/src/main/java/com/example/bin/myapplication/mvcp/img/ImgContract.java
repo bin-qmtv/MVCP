@@ -1,6 +1,9 @@
 package com.example.bin.myapplication.mvcp.img;
 
 import com.example.bin.myapplication.mvp.BaseView;
+
+import io.reactivex.Observable;
+
 /**
  * description
  *
@@ -15,5 +18,7 @@ public interface ImgContract {
 
     interface View extends BaseView<Presenter> {
         void setImg(int resId);
+
+        Observable<Boolean> doOnImgVisible();
     }
 }

@@ -30,11 +30,6 @@ public class TabController extends UIController implements ControllerFragment.Fr
     }
 
     @Override
-    public void initPresenter() {
-
-    }
-
-    @Override
     public void initView() {
 
     }
