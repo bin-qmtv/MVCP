@@ -14,7 +14,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PointBefore {
-    Class<?> value() default Object.class;
+    Class<?>[] value() default Object.class;
 
-    String name() default "";
+    String[] name() default {};
+
+    String extra() default "";
 }

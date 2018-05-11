@@ -4,6 +4,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.bin.myapplication.mvp.annotation.PointAfter;
@@ -43,14 +44,23 @@ public class MvpDelegate implements InvocationHandler {
         return result;
     }
 
-    private void checkPointBefore(Method method, Object[] args)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-            InvocationTargetException {
+    private void checkPointBefore(Method method, Object[] args) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException, InvocationTargetException {
         PointBefore pointBefore = method.getAnnotation(PointBefore.class);
         if (pointBefore != null) {
-            Class cls = pointBefore.value();
-            String pointName = pointBefore.name();
-            invokePoint(args, cls, pointName);
+            Class[] classes = pointBefore.value();
+            String[] pointNames = pointBefore.name();
+            String extra = pointBefore.extra();
+            if (classes.length > 0) {
+                for (Class cls : classes) {
+                    invokePoint(args, cls, extra);
+                }
+            }
+            if (pointNames.length > 0) {
+                for (String pointName : pointNames) {
+                    invokePoint(args, pointName, extra);
+                }
+            }
         }
     }
 
@@ -59,41 +69,78 @@ public class MvpDelegate implements InvocationHandler {
             InvocationTargetException {
         PointAfter pointAfter = method.getAnnotation(PointAfter.class);
         if (pointAfter != null) {
-            Class cls = pointAfter.value();
-            String pointName = pointAfter.name();
-            invokePoint(args, cls, pointName);
+            Class[] classes = pointAfter.value();
+            String[] pointNames = pointAfter.name();
+            String extra = pointAfter.extra();
+            if (classes.length > 0) {
+                for (Class cls : classes) {
+                    invokePoint(args, cls, extra);
+                }
+            }
+            if (pointNames.length > 0) {
+                for (String pointName : pointNames) {
+                    invokePoint(args, pointName, extra);
+                }
+            }
         }
     }
 
-    private void invokePoint(Object[] args, Class cls, String pointName)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-            InvocationTargetException {
+    private void invokePoint(Object[] args, Class cls, String extra) throws InstantiationException,
+            IllegalAccessException, InvocationTargetException {
         Class[] interfaces = cls.getInterfaces();
         if (interfaces != null && interfaces.length > 0) {
             for (Class i : interfaces) {
                 if (i.equals(MvpPoint.class)) {
-                    Object point = getPoint(i);
+                    Object point = getPoint(i.getCanonicalName());
                     if (point == null) {
                         if (cls != Object.class) {
                             point = cls.newInstance();
-                        } else {
-                            point = Class.forName(pointName);
-                        }
-                        if (point != null) {
-                            addPoint(point);
+                            if (point != null) {
+                                addPoint(point);
+                            }
                         }
                     }
-
-                    if (point != null) {
-                        Method[] methods = i.getMethods();
-                        if (methods != null && methods.length > 0) {
-                            MvpPoint.PointParams pp = new MvpPoint.PointParams(args);
-                            methods[0].invoke(point, pp);
-                        }
+                    Method[] methods = i.getMethods();
+                    if (methods != null && methods.length > 0) {
+                        invokePointMethod(args, point, methods[0], extra);
                     }
                     break;
                 }
             }
+        }
+    }
+
+    private void invokePoint(Object[] args, String pointName, String extra) throws IllegalAccessException,
+            ClassNotFoundException, InvocationTargetException {
+        if (TextUtils.isEmpty(pointName)) return;
+        Object point = getPoint(pointName);
+        if (point == null) {
+            point = Class.forName(pointName);
+            if (point != null) {
+                addPoint(point);
+            }
+        }
+        if (point != null) {
+            Class[] interfaces = point.getClass().getInterfaces();
+            if (interfaces != null && interfaces.length > 0) {
+                for (Class i : interfaces) {
+                    if (i.equals(MvpPoint.class)) {
+                        Method[] methods = i.getMethods();
+                        if (methods != null && methods.length > 0) {
+                            invokePointMethod(args, point, methods[0], extra);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void invokePointMethod(Object[] args, Object point, Method method, String extra)
+            throws IllegalAccessException, InvocationTargetException {
+        if (point != null && method != null) {
+            MvpPoint.PointParams pp = new MvpPoint.PointParams(args, extra);
+            method.invoke(point, pp);
         }
     }
 
@@ -105,9 +152,9 @@ public class MvpDelegate implements InvocationHandler {
     }
 
     @Nullable
-    private Object getPoint(Class i) {
+    private Object getPoint(@NonNull String key) {
         if (points != null) {
-            return points.get(i.getCanonicalName());
+            return points.get(key);
         }
         return null;
     }

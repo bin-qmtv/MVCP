@@ -17,6 +17,6 @@ public class BtnImgPoint implements MvpPoint{
 
     @Override
     public void point(@NonNull PointParams pointParams) {
-        Log.d("MvpDelegate", "point : " + Arrays.toString(pointParams.params));
+        Log.d("MvpDelegate", "point : " + Arrays.toString(pointParams.params) + ", extra:" + pointParams.extra);
     }
 }

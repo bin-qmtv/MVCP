@@ -3,6 +3,7 @@ package com.example.bin.myapplication.mvcp.btn;
 import android.widget.Button;
 
 import com.example.bin.myapplication.mvp.BaseView;
+import com.example.bin.myapplication.mvp.annotation.PointAfter;
 import com.example.bin.myapplication.mvp.annotation.PointBefore;
 import com.example.bin.myapplication.mvp.annotation.PrintDuration;
 
@@ -18,6 +19,8 @@ public interface BtnContract {
         @PointBefore(BtnImgPoint.class)
         int getImg();
 
+        @PointBefore(value = BtnImgPoint.class, extra = "PointBefore")
+        @PointAfter(value = BtnImgPoint.class, extra = "PointAfter")
         @PrintDuration
         String doSomething();
     }
