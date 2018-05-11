@@ -8,8 +8,8 @@ import com.example.bin.myapplication.mvcp.img.ImgController;
 import com.example.bin.myapplication.mvcp.txt.TxtContract;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
-import com.example.bin.myapplication.mvp.annotation.Presenter;
 import com.example.bin.myapplication.mvp.UIController;
+import com.example.bin.myapplication.mvp.annotation.Presenter;
 import com.example.bin.myapplication.ui.StateView;
 
 import butterknife.BindView;
@@ -84,8 +84,7 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
                     });
         });
 
-        ImgContract.View imgController = controller.getUIController(ImgController.class);
-        imgController.doOnImgVisible().subscribe(visible->{
+        getUIController(ImgContract.View.class).doOnImgVisible().subscribe(visible->{
             // do on img visible
             presenter.doSomething();
         });

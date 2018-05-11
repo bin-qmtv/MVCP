@@ -26,11 +26,11 @@ import java.util.Map;
  */
 public class MvpDelegate implements InvocationHandler {
 
-    private static final String TAG = "MvpDelegate";
+    private static final String TAG = "MVP";
     private Object instance;
     private Map<String, Object> points;
 
-    private MvpDelegate(@NonNull Object instance) {
+    MvpDelegate(@NonNull Object instance) {
         this.instance = instance;
     }
 
@@ -64,9 +64,8 @@ public class MvpDelegate implements InvocationHandler {
         }
     }
 
-    private void checkPointAfter(Method method, Object[] args)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-            InvocationTargetException {
+    private void checkPointAfter(Method method, Object[] args) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException, InvocationTargetException {
         PointAfter pointAfter = method.getAnnotation(PointAfter.class);
         if (pointAfter != null) {
             Class[] classes = pointAfter.value();
@@ -166,16 +165,5 @@ public class MvpDelegate implements InvocationHandler {
             Log.d(TAG, "invoke -> " + MvpFactory.getMethodDesc(method)
                     + "(" + Arrays.toString(args) + ") : " + duration + "ms");
         }
-    }
-
-    public static <T> T newProxy(@NonNull T instance) {
-        check(instance);
-        return (T) Proxy.newProxyInstance(instance.getClass().getClassLoader(),
-                instance.getClass().getInterfaces(), new MvpDelegate(instance));
-    }
-
-    private static <T> void check(T instance) {
-        Class cls = instance.getClass();
-        MvpFactory.checkInterfaces(cls);
     }
 }

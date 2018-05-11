@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * description
@@ -22,21 +20,21 @@ import java.util.Set;
  */
 public abstract class ControllerFragment extends BaseCleanFragment implements Controller, Backable {
 
-    public ArrayMap<Class, UIController> controllerProxyArrayMap = new ArrayMap<>();
-    public ArrayMap<Class, UIController> controllerArrayMap = new ArrayMap<>();
-    private List<FragmentLifecycle> mFragmentLifecycles = new ArrayList<>();
+    public ArrayMap<String, Object> controllerProxyArrayMap = new ArrayMap<>();
+    public ArrayMap<String, UIController> controllerArrayMap = new ArrayMap<>();
+    private List<FragmentLifecycle> mFragmentLifecycle = new ArrayList<>();
 
-    public void addFragmentLifecycle(FragmentLifecycle fragmentLifecycle) {
-        if (mFragmentLifecycles == null) {
-            mFragmentLifecycles = new ArrayList<>();
+    public void addFragmentLifecycle(@NonNull FragmentLifecycle fragmentLifecycle) {
+        if (mFragmentLifecycle == null) {
+            mFragmentLifecycle = new ArrayList<>();
         }
-        mFragmentLifecycles.add(fragmentLifecycle);
+        mFragmentLifecycle.add(fragmentLifecycle);
     }
 
     @Override
     @Nullable
     public <T> T getUIController(@NonNull Class<T> cls) {
-        return (T) controllerProxyArrayMap.get(cls);
+        return (T) controllerProxyArrayMap.get(cls.getCanonicalName());
     }
 
     @Override
@@ -46,9 +44,20 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     }
 
     @Override
-    public <T extends UIController> void addUIController(@NonNull T uiController) {
-        controllerArrayMap.put(uiController.getClass(), uiController);
-        controllerProxyArrayMap.put(uiController.getClass(), MvpDelegate.newProxy(uiController));
+    public void addUIController(@NonNull UIController uiController) {
+        Class cls = null;
+        if (uiController instanceof BaseView) {
+            cls = InjectUtil.findBaseView(uiController.getClass());
+        }
+        addUIController(uiController, cls);
+    }
+
+    @Override
+    public <V extends BaseView> void addUIController(@NonNull UIController uiController, Class<V> view) {
+        controllerArrayMap.put(uiController.getClass().getCanonicalName(), uiController);
+        Object proxy = MvpFactory.newProxy(uiController);
+        controllerProxyArrayMap.put(uiController.getClass().getCanonicalName(), proxy);
+        if (view != null) controllerProxyArrayMap.put(view.getCanonicalName(), proxy);
         if (uiController instanceof FragmentLifecycle) {
             addFragmentLifecycle((FragmentLifecycle) uiController);
         }
@@ -62,11 +71,10 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (mFragmentLifecycles != null && mFragmentLifecycles.size() > 0) {
-            for (FragmentLifecycle fragmentLifecycle : mFragmentLifecycles) {
+        if (mFragmentLifecycle != null && mFragmentLifecycle.size() > 0) {
+            for (FragmentLifecycle fragmentLifecycle : mFragmentLifecycle) {
                 fragmentLifecycle.onCreateView(view);
             }
         }
@@ -76,8 +84,8 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mFragmentLifecycles != null && mFragmentLifecycles.size() > 0) {
-            for (FragmentLifecycle fragmentLifecycle : mFragmentLifecycles) {
+        if (mFragmentLifecycle != null && mFragmentLifecycle.size() > 0) {
+            for (FragmentLifecycle fragmentLifecycle : mFragmentLifecycle) {
                 fragmentLifecycle.onDestroyView();
             }
         }
@@ -86,9 +94,7 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-        for (Map.Entry<Class, UIController> controllerEntry : set) {
-            UIController uiController = controllerEntry.getValue();
+        for (UIController uiController : controllerArrayMap.values()) {
             if (uiController != null) uiController.onSaveState(outState);
         }
     }
@@ -96,39 +102,29 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-        for (Map.Entry<Class, UIController> controllerEntry : set) {
-            UIController uiController = controllerEntry.getValue();
+        for (UIController uiController : controllerArrayMap.values()) {
             if (uiController != null) uiController.onStateRestored(savedInstanceState);
         }
     }
 
     @Override
     public void initView() {
-        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-        for (Map.Entry<Class, UIController> controllerEntry : set) {
-            UIController uiController = controllerEntry.getValue();
+        for (UIController uiController : controllerArrayMap.values()) {
             if (uiController != null) uiController.initView();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-        for (Map.Entry<Class, UIController> controllerEntry : set) {
-            UIController uiController = controllerEntry.getValue();
-            if (uiController != null) {
-                uiController.onResult(requestCode, resultCode, data);
-            }
+        for (UIController uiController : controllerArrayMap.values()) {
+            if (uiController != null) uiController.onResult(requestCode, resultCode, data);
         }
     }
 
     @Override
     public boolean onBackPressed() {
         boolean hasBackAction = false;
-        Set<Map.Entry<Class, UIController>> set = controllerArrayMap.entrySet();
-        for (Map.Entry<Class, UIController> controllerEntry : set) {
-            UIController uiController = controllerEntry.getValue();
+        for (UIController uiController : controllerArrayMap.values()) {
             if (uiController != null && uiController.onBackPressed()) {
                 hasBackAction = true;
             }

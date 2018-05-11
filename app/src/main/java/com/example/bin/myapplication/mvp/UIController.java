@@ -22,7 +22,7 @@ public abstract class UIController<P> implements Backable {
     protected P presenter;
 
     public final void setPresenter(P presenter) {
-        this.presenter = MvpDelegate.newProxy(presenter);
+        this.presenter = MvpFactory.newProxy(presenter);
         if (presenter instanceof LifecycleObserver) {
             LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
             if (controllerFragment != null) {
@@ -94,6 +94,12 @@ public abstract class UIController<P> implements Backable {
         if (this instanceof BaseView) {
             InjectUtil.injectPresenter((BaseView)this);
         }
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+    }
+
+    public void onPostResume() {
     }
 
     public void onResult(int requestCode, int resultCode, Intent data) {

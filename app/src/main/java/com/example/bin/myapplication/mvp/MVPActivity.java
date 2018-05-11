@@ -13,7 +13,7 @@ public abstract class MVPActivity<P> extends BaseCleanActivity {
     protected P presenter;
 
     public void setPresenter(P presenter) {
-        this.presenter = MvpDelegate.newProxy(presenter);
+        this.presenter = MvpFactory.newProxy(presenter);
         if (presenter instanceof LifecycleObserver) {
             LifecycleObserver lifecycleObserver = (LifecycleObserver) presenter;
             getLifecycle().addObserver(lifecycleObserver);

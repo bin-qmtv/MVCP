@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * description
@@ -35,6 +36,12 @@ public class MvpFactory {
             }
         }
         return null;
+    }
+
+    public static <T> T newProxy(@NonNull T instance) {
+        checkInterfaces(instance.getClass());
+        return (T) Proxy.newProxyInstance(instance.getClass().getClassLoader(),
+                instance.getClass().getInterfaces(), new MvpDelegate(instance));
     }
 
     static String getMethodDesc(Method method) {
