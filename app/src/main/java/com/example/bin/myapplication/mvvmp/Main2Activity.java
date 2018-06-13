@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.MVPActivity;
+import com.example.bin.myapplication.mvp.ToolBarUtil;
 import com.example.bin.myapplication.mvp.annotation.Presenter;
 
 @Presenter(Main2Presenter.class)
@@ -27,7 +28,7 @@ public class Main2Activity extends MVPActivity<Main2Contract.Presenter> implemen
 
     @Override
     public void initView() {
-        initToolBar(findViewById(R.id.toolbar), "mvp demo");
+        ToolBarUtil.init(this, findViewById(R.id.toolbar), "mvp demo");
         text = findViewById(R.id.text);
     }
 
