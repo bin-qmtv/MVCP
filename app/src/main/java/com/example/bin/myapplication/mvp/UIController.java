@@ -20,6 +20,7 @@ public abstract class UIController<P> implements Backable {
     protected ControllerFragment controllerFragment;
 
     protected P presenter;
+    private boolean isAbortBackPressed;
 
     public final void setPresenter(P presenter) {
         this.presenter = MvpFactory.newProxy(presenter);
@@ -96,6 +97,19 @@ public abstract class UIController<P> implements Backable {
         }
     }
 
+    /** 中断其他UIController的返回键处理 */
+    protected void abortBackPressed() {
+        isAbortBackPressed = true;
+    }
+
+    public void setAbortBackPressed(boolean isAbortBackPressed) {
+        this.isAbortBackPressed = isAbortBackPressed;
+    }
+
+    public boolean isAbortBackPressed() {
+        return isAbortBackPressed;
+    }
+
     public void onWindowFocusChanged(boolean hasFocus) {
     }
 
@@ -111,6 +125,10 @@ public abstract class UIController<P> implements Backable {
     public void onStateRestored(Bundle savedState) {
     }
 
+    /**
+     * 按下返回键
+     * @return 是否拦截activity的返回键处理
+     */
     public boolean onBackPressed() {
         return false;
     }

@@ -1,6 +1,7 @@
 package com.example.bin.myapplication.mvcp.txt;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class TxtController extends UIController<TxtContract.Presenter> implement
     }
 
     private int i = 0;
+
+    //@Priority(3)
     @Override
     public boolean onBackPressed() {
         i++;

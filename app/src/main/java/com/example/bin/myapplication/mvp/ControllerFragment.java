@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bin.myapplication.mvp.annotation.Priority;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     public ArrayMap<String, Object> controllerProxyArrayMap = new ArrayMap<>();
     public ArrayMap<String, UIController> controllerArrayMap = new ArrayMap<>();
     private List<FragmentLifecycle> mFragmentLifecycle = new ArrayList<>();
+    private ArrayList<UIController> sortedUIControllers = new ArrayList<>();
+    private boolean isAbortBackPressed;
 
     public void addFragmentLifecycle(@NonNull FragmentLifecycle fragmentLifecycle) {
         if (mFragmentLifecycle == null) {
@@ -54,6 +59,7 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
 
     @Override
     public <V extends BaseView> void addUIController(@NonNull UIController uiController, Class<V> view) {
+        addSort(uiController);
         controllerArrayMap.put(uiController.getClass().getCanonicalName(), uiController);
         Object proxy = MvpFactory.newProxy(uiController);
         controllerProxyArrayMap.put(uiController.getClass().getCanonicalName(), proxy);
@@ -61,6 +67,11 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
         if (uiController instanceof FragmentLifecycle) {
             addFragmentLifecycle((FragmentLifecycle) uiController);
         }
+    }
+
+    @Override
+    public int getUIControllerSize(){
+        return controllerArrayMap.size();
     }
 
     @Override
@@ -124,12 +135,66 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     @Override
     public boolean onBackPressed() {
         boolean hasBackAction = false;
-        for (UIController uiController : controllerArrayMap.values()) {
-            if (uiController != null && uiController.onBackPressed()) {
-                hasBackAction = true;
+
+        for (UIController uiController : sortedUIControllers) {
+            if (uiController != null) {
+                if (uiController.onBackPressed()) {
+                    hasBackAction = true;
+                }
+
+                if(uiController.isAbortBackPressed()){
+                    uiController.setAbortBackPressed(false);
+                    break;
+                }
             }
         }
         return hasBackAction;
+    }
+
+    public void setAbort(boolean isAbort) {
+        this.isAbortBackPressed = isAbort;
+    }
+
+    public boolean isAbortBackPressed() {
+        return isAbortBackPressed;
+    }
+
+    private void addSort(@NonNull UIController uiController) {
+        if (sortedUIControllers.size() > 0) {
+            UIController priorityUIController = sortedUIControllers.get(0);
+
+            int p1 = getPriority(priorityUIController);
+            int p2 = getPriority(uiController);
+
+            if (p2 > p1) {
+                sortedUIControllers.add(0, uiController);
+                return;
+            } else if (p2 == p1) {
+                for (int i = 1; i < sortedUIControllers.size(); i++) {
+                    int p = getPriority(sortedUIControllers.get(i));
+                    if (p < p2) {
+                        sortedUIControllers.add(i, uiController);
+                        return;
+                    }
+                }
+            }
+        }
+        sortedUIControllers.add(uiController);
+    }
+
+    private int getPriority (@NonNull UIController uiController) {
+        try {
+            Method method = uiController.getClass().getMethod("onBackPressed");
+            if (method != null) {
+                Priority priority = method.getAnnotation(Priority.class);
+                if (priority != null) {
+                    return priority.value();
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public abstract void initUIController();

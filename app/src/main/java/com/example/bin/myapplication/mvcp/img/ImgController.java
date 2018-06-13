@@ -1,5 +1,6 @@
 package com.example.bin.myapplication.mvcp.img;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.bin.myapplication.R;
@@ -40,5 +41,12 @@ public class ImgController extends UIController<ImgContract.Presenter> implement
     public Observable<Boolean> doOnImgVisible() {
         if (img == null) img = findViewById(R.id.img);
         return Observable.create(emitter -> img.post(() -> emitter.onNext(true)));
+    }
+
+    //@Priority(1)
+    @Override
+    public boolean onBackPressed() {
+        Log.d("---", "onBackPressed: " + getClass().getSimpleName());
+        return super.onBackPressed();
     }
 }

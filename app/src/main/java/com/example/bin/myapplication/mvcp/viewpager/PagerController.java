@@ -4,10 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvp.ControllerActivity;
+import com.example.bin.myapplication.mvp.ControllerFragment;
 import com.example.bin.myapplication.mvp.UIController;
 
 import java.io.Serializable;
@@ -25,6 +27,7 @@ public class PagerController extends UIController implements Serializable {
 
     @BindView(R.id.pager)
     ViewPager pager;
+    private FragmentAdapter adapter;
 
     public PagerController(ControllerActivity controller) {
         super(controller);
@@ -34,14 +37,33 @@ public class PagerController extends UIController implements Serializable {
     public void initView() {
         ButterKnife.bind(this, getControllerActivity());
 
-        FragmentAdapter adapter = new FragmentAdapter(getControllerActivity().getSupportFragmentManager());
+        adapter = new FragmentAdapter(getControllerActivity().getSupportFragmentManager());
         pager.setAdapter(adapter);
 
     }
 
+    @Override
+    public boolean onBackPressed() {
+        Log.d("---", "onBackPressed: " + getClass().getSimpleName());
+        boolean hasBackPressed = false;
+        if (adapter != null) {
+            SparseArray<ControllerFragment> array = adapter.mFragments;
+            if (array != null) {
+                for (int i = 0; i < array.size(); i++) {
+                    boolean r = array.get(i).onBackPressed();
+                    if (r) {
+                        hasBackPressed = true;
+                    }
+                }
+            }
+        }
+
+        return hasBackPressed;
+    }
+
     public static class FragmentAdapter extends FragmentStatePagerAdapter {
 
-        SparseArray<Fragment> mFragments = new SparseArray<>();
+        SparseArray<ControllerFragment> mFragments = new SparseArray<>();
 
         public FragmentAdapter(FragmentManager fm) {
             super(fm);
@@ -49,7 +71,7 @@ public class PagerController extends UIController implements Serializable {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = mFragments.get(position);
+            ControllerFragment fragment = mFragments.get(position);
             if (fragment == null) {
                 switch (position) {
                     case 0:

@@ -3,6 +3,7 @@ package com.example.bin.myapplication.mvcp.viewpager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class ListController extends UIController implements ControllerFragment.F
     RecyclerView list;
 
     private Unbinder unbinder;
+    private LinearLayoutManager mLinearLayoutManager;
 
     public ListController(ControllerFragment controller) {
         super(controller);
@@ -45,8 +47,20 @@ public class ListController extends UIController implements ControllerFragment.F
 
     @Override
     public void initView() {
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        list.setLayoutManager(mLinearLayoutManager);
         list.setAdapter(new ListAdapter());
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        Log.d("---", "onBackPressed: " + getClass().getSimpleName());
+        int pos = mLinearLayoutManager.findFirstVisibleItemPosition();
+        if (pos != 0) {
+            list.scrollToPosition(0);
+            return true;
+        }
+        return false;
     }
 
     public static class ListAdapter extends RecyclerView.Adapter<ListViewHolder> {

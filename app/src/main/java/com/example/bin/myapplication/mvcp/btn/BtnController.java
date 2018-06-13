@@ -10,6 +10,7 @@ import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
 import com.example.bin.myapplication.mvp.UIController;
 import com.example.bin.myapplication.mvp.annotation.Presenter;
+import com.example.bin.myapplication.mvp.annotation.Priority;
 import com.example.bin.myapplication.ui.StateView;
 
 import butterknife.BindView;
@@ -93,5 +94,12 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
     @Override
     public void setText(Button btn, String txt) {
         btn.setText(txt);
+    }
+
+    @Priority(1)
+    @Override
+    public boolean onBackPressed() {
+        //abortBackPressed();
+        return super.onBackPressed();
     }
 }

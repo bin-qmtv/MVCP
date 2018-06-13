@@ -19,4 +19,6 @@ public interface Controller {
     void addUIController(@NonNull UIController uiController);
 
     <V extends BaseView> void addUIController(@NonNull UIController uiController, Class<V> view);
+
+    int getUIControllerSize();
 }
