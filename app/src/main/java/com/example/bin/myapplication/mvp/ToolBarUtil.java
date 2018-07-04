@@ -23,15 +23,15 @@ import com.example.bin.myapplication.R;
  */
 public class ToolBarUtil {
 
-    static class Builder {
-        Toolbar toolbar;
-        CharSequence title;
-        boolean enableHomeAsUp;
-        Drawable drawable;
+    public static class Builder {
+        private Toolbar toolbar;
+        private CharSequence title;
+        private boolean enableHomeAsUp;
+        private Drawable drawable;
         @DrawableRes
-        int resId;
-        int arrowColor;
-        View.OnClickListener clickListener;
+        private int resId;
+        private int arrowColor;
+        private View.OnClickListener clickListener;
 
         Builder(Toolbar toolbar) {
             this.toolbar = toolbar;
