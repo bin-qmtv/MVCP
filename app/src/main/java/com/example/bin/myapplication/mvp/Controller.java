@@ -14,8 +14,6 @@ public interface Controller {
     @Nullable
     <T> T getUIController(@NonNull Class<T> cls);
 
-    <T extends UIController> void addUIController(@NonNull Class<T> cls);
-
     void addUIController(@NonNull UIController uiController);
 
     <V extends BaseView> void addUIController(@NonNull UIController uiController, Class<V> view);

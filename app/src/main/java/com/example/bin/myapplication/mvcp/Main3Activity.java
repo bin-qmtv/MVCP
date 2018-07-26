@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.bin.myapplication.R;
+import com.example.bin.myapplication.mvcp.btn.BtnContract;
 import com.example.bin.myapplication.mvcp.btn.BtnController;
+import com.example.bin.myapplication.mvcp.img.ImgContract;
 import com.example.bin.myapplication.mvcp.img.ImgController;
+import com.example.bin.myapplication.mvcp.img.ImgControllerDelegate;
 import com.example.bin.myapplication.mvcp.txt.TextViewModel;
+import com.example.bin.myapplication.mvcp.txt.TxtContract;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvcp.viewpager.PagerController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
@@ -37,10 +41,10 @@ public class Main3Activity extends ControllerActivity {
 
     @Override
     public void initUIController() {
-        addUIController(new TxtController(this));
-        addUIController(ImgController.class);
-        addUIController(BtnController.class);
-        addUIController(PagerController.class);
+        addUIController(new TxtController(this), TxtContract.View.class);
+        addUIController(new ImgControllerDelegate(this, new ImgController(this)), ImgContract.View.class);
+        addUIController(new BtnController(this), BtnContract.View.class);
+        addUIController(new PagerController(this));
     }
 
     public void fetch() {

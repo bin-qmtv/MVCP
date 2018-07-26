@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.bin.myapplication.mvp.annotation.Priority;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,12 +45,6 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     }
 
     @Override
-    public <T extends UIController> void addUIController(@NonNull Class<T> cls) {
-        UIController uiController = MvpFactory.newInstance(cls, this);
-        if (uiController != null) addUIController(uiController);
-    }
-
-    @Override
     public void addUIController(@NonNull UIController uiController) {
         Class cls = null;
         if (uiController instanceof BaseView) {
@@ -59,7 +55,7 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
 
     @Override
     public <V extends BaseView> void addUIController(@NonNull UIController uiController, Class<V> view) {
-        addSort(uiController);
+        sortedUIControllers.add(uiController);
         controllerArrayMap.put(uiController.getClass().getCanonicalName(), uiController);
         Object proxy = MvpFactory.newProxy(uiController);
         controllerProxyArrayMap.put(uiController.getClass().getCanonicalName(), proxy);
@@ -78,6 +74,7 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUIController();
+        sort();
     }
 
     @Nullable
@@ -151,48 +148,30 @@ public abstract class ControllerFragment extends BaseCleanFragment implements Co
         return hasBackAction;
     }
 
-    public void setAbort(boolean isAbort) {
-        this.isAbortBackPressed = isAbort;
-    }
-
-    public boolean isAbortBackPressed() {
-        return isAbortBackPressed;
-    }
-
-    private void addSort(@NonNull UIController uiController) {
-        if (sortedUIControllers.size() > 0) {
-            UIController priorityUIController = sortedUIControllers.get(0);
-
-            int p1 = getPriority(priorityUIController);
-            int p2 = getPriority(uiController);
-
-            if (p2 > p1) {
-                sortedUIControllers.add(0, uiController);
-                return;
-            } else if (p2 == p1) {
-                for (int i = 1; i < sortedUIControllers.size(); i++) {
-                    int p = getPriority(sortedUIControllers.get(i));
-                    if (p < p2) {
-                        sortedUIControllers.add(i, uiController);
-                        return;
-                    }
-                }
-            }
+    private void sort() {
+        if (sortedUIControllers == null || sortedUIControllers.size() < 2) {
+            return;
         }
-        sortedUIControllers.add(uiController);
+        Collections.sort(sortedUIControllers, (o1, o2) -> {
+            int p1 = getPriority(o1);
+            int p2 = getPriority(o2);
+            return p2 - p1;
+        });
     }
 
     private int getPriority (@NonNull UIController uiController) {
-        try {
-            Method method = uiController.getClass().getMethod("onBackPressed");
-            if (method != null) {
-                Priority priority = method.getAnnotation(Priority.class);
-                if (priority != null) {
-                    return priority.value();
+        Method[] backMethods = Backable.class.getMethods();
+        if(backMethods.length > 0){
+            String name = backMethods[0].getName();
+            Method[] methods = uiController.getClass().getMethods();
+            for (Method method : methods) {
+                if(method != null) {
+                    Priority priority = method.getAnnotation(Priority.class);
+                    if (priority != null && TextUtils.equals(name, method.getName())) {
+                        return priority.value();
+                    }
                 }
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
         }
         return 0;
     }

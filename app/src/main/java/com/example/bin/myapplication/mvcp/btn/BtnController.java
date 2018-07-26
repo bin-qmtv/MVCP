@@ -4,7 +4,6 @@ import android.widget.Button;
 
 import com.example.bin.myapplication.R;
 import com.example.bin.myapplication.mvcp.img.ImgContract;
-import com.example.bin.myapplication.mvcp.img.ImgController;
 import com.example.bin.myapplication.mvcp.txt.TxtContract;
 import com.example.bin.myapplication.mvcp.txt.TxtController;
 import com.example.bin.myapplication.mvp.ControllerActivity;
@@ -47,7 +46,7 @@ public class BtnController extends UIController<BtnContract.Presenter> implement
 
         btn1.setOnClickListener(v -> {
             int res = presenter.getImg();
-            ImgContract.View imgController = getUIController(ImgController.class);
+            ImgContract.View imgController = getUIController(ImgContract.View.class);
             imgController.setImg(res);
         });
 
